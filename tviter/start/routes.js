@@ -20,9 +20,23 @@ Route.get('/', () => {
     return { greeting: 'Hello world in JSON' }
 })
 
+/** 
+ * UserController Routes
+ */
+
 Route.post('/signup', 'UserController.signup')
 
 Route.post('/login', 'UserController.login')
+
+Route.post('/follow/:id', 'UserController.follow')
+
+Route.get(':username', 'UserController.showProfile')
+
+Route.get('/timeline', 'UserController.timeline')
+
+Route.put('/change_password', 'UserController.changePassword')
+
+Route.delete('/unfollow/:id', 'UserController.unFollow')
 
 Route.group(() => {
     Route.get('/profile_data', 'UserController.profileData')
@@ -35,13 +49,9 @@ Route.group(() => {
 }).prefix('users')
   .middleware(['auth:jwt'])
 
-Route.put('/change_password', 'UserController.changePassword')
 
-Route.get(':username', 'UserController.showProfile')
+/**
+ * TweetController Routes
+ */
 
-Route.post('/follow/:id', 'UserController.follow')
-
-Route.delete('/unfollow/:id', 'UserController.unFollow')
-
-Route.get('/timeline', 'UserController.timeline')
-
+Route.post('/tweet', 'TweetController.tweet').middleware(['auth:jwt'])
