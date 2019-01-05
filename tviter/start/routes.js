@@ -30,3 +30,18 @@ Route.group(() => {
 }).prefix('account')
   .middleware(['auth:jwt'])
 
+Route.group(() => {
+    Route.get('/users_to_follow', 'UserController.usersToFollow');
+}).prefix('users')
+  .middleware(['auth:jwt'])
+
+Route.put('/change_password', 'UserController.changePassword')
+
+Route.get(':username', 'UserController.showProfile')
+
+Route.post('/follow/:id', 'UserController.follow')
+
+Route.delete('/unfollow/:id', 'UserController.unFollow')
+
+Route.get('/timeline', 'UserController.timeline')
+
