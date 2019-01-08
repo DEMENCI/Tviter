@@ -18,6 +18,159 @@
 \end{itemize}
 
 \section{Project implementation}
+\subsection{Backend}
+	As mentioned above for the backend we used AdonisJS, a Node.js MVC framework. Here are some characteristics of it : 
+	\begin{itemize}
+		\item Solid MVC arhitecture;
+		\item Active Record based ORM;
+		\item Unit testing API;
+	\end{itemize}
 
+	First we need to instal the Adonis CLI for future usages with the command:
+	\begin{verbatim}
+		npm install -g @adonis/cli
+	\end{verbatim}
+	
+	Then, to create the application we used the command:
+	\begin{verbatim}
+		adonis new tviter_api --api-only
+	\end{verbatim}
+	
+	Here was used the \textbf{--api-only} flag because we don't need any views from adonis, only the blueprint for the api.
+	
+	To launch the app run commands:
+	\begin{verbatim}
+		cd tviter_api
+		adonis serve --dev
+	\end{verbatim}
+	
+	It will be accessible at \textbf{localhost:3333}.
+	
+	Next comes the database setup. For the DBMS we used MySQL. To interact with the app we need to install the coresponding package:
+	\begin{verbatim}
+		npm install mysql --save
+	\end{verbatim} 
+	
+	The details for the DB connection are located in the environment variables from .env:
+	\begin{verbatim}
+		DB_CONNECTION=mysql
+		DB_HOST=127.0.0.1
+		DB_PORT=3306
+		DB_USER=root
+		DB_PASSWORD=$%#@&
+		DB_DATABASE=tviter
+	\end{verbatim}
+	
+	After the database is configured, to create all the necessary tables and all of it we need migrations.
+	
+	To create a migration we use the command:
+	\begin{verbatim}
+		adonis make:migration name
+	\end{verbatim} 
+	
+	In the current app there are 6 migrations all identified by an id and the table or object it creates/modifies: $id\_name.js$
+	
+	To keep the form of the data an the relations between tables we use models. The models used in the API are: 
+	\begin{itemize}
+		\item Favorite;
+		\item Reply;
+		\item Tweet;
+		\item User;
+	\end{itemize}
+	
+	In those are specified relations with methods from adonis API.
+	
+	For the Controller we have 3 Http request/response controllers created with the command:
+	\begin{verbatim}
+		adonis make:controller name --type=http
+	\end{verbatim}
+	
+	These are:
+	\begin{itemize}
+		\item FavoriteController;
+		\item TweetController;
+		\item UserController;
+	\end{itemize}
 
+	Also, the routes are defined in the routes.js file from start folder.
+	
+\subsection{Frontend}
+	The frontend was implemented in a Vue.js app. Initially we need Vue cli ofcourse and it can be installed with the command:
+	\begin{verbatim}
+		npm install -g vue-cli
+	\end{verbatim}
+	
+	Then to create the app we used the command:
+	\begin{verbatim}
+		vue init webpack tviter-frontend
+	\end{verbatim}
+	
+	To launch the app use the commands:
+	\begin{verbatim}
+		cd tviter-frontend
+		npm install
+		npm run dev
+	\end{verbatim}
+	
+	To connect the frontend to the API we need axios which is an HTTP client. Install it with:
+	\begin{verbatim}
+		npm install axios --save
+	\end{verbatim}
+	
+	Then to configure it go in src/main.js file and update as follows:
+	\begin{verbatim}
+		import axios from 'axios'
+		
+		// add these before Vue is instantiated
+		window.axios = axios // reference axios globally
+		axios.defaults.baseURL = 'http://localhost:3333' // default URL for API
+	\end{verbatim}
+	
+	As CSS framwork we used SemanticUI which was include in index.html by CDN:
+	\begin{verbatim}
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.13/semantic.min.css" />
+	\end{verbatim}
+	
+	After this comes the UI. It was implemented with components. Each component contains the markup and the script. The used components can be arranged as a hierarchy in the following way:
+	\begin{itemize}
+		\item \textbf{Components}
+		\item \begin{itemize}
+			      \item \textbf{Auth}
+			      \item LoginForm
+			      \item SignupForm				
+	   		  \end{itemize}
+   		\item \begin{itemize}
+   		          \item \textbf{Tweet}
+   		          \item Replies
+   		          \item SingleTweet
+   		          \item Tweet
+   		          \item TweetRecations
+   		          \item Tweets
+   			  \end{itemize}
+   		\item \begin{itemize}
+	   			  \item \textbf{User}
+  	   			  \item \begin{itemize}
+  	   			  	        \item \textbf{Profile}
+  	   			  	        \item FavoriteTweets
+  	   			  	        \item UserCard
+  	   			  	        \item UserFollowers
+  	   			  	        \item UserProfile
+  	   			  	        \item UserProfileHeader
+  	   			  	        \item UserProfileSidebar
+  	   			  	        \item UsersFollowing    
+  	   			        \end{itemize}  
+	   			  \item \begin{itemize}
+							\item \textbf{Settings}
+							\item UserPasswordSettings
+							\item UserProfileSettings
+							\item UserSettingsMenu	
+	        	   	    \end{itemize}
+	   			  \item UserSidebar
+	   			  \item WhoToFollow
+	   		\end{itemize}
+   		\item Home
+   		\item Notification  
+	\end{itemize}
+
+	The routes are kept in router/index.js file.
 \clearpage
