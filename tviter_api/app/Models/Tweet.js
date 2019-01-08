@@ -1,31 +1,40 @@
 'use strict'
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
 class Tweet extends Model {
+  /**
+   * A tweet belong to a user.
+   *
+   * @method user
+   *
+   * @return {Object}
+   */
+  user () {
+    return this.belongsTo('App/Models/User')
+  }
 
-    /**
-     * The Tweet model belongs to a 
-     * relationship with User model
-     */
-    user () {
-        return this.belongsTo('App/Models/User')
-    }
+  /**
+   * A tweet can have as many replies as possible.
+   *
+   * @method replies
+   *
+   * @return {Object}
+   */
+  replies () {
+    return this.hasMany('App/Models/Reply')
+  }
 
-    /** 
-     * The Tweet and the Reply have a one-to-many relationship
-     */
-    replies () {
-        return this.hasMany('App/Models/Reply')
-    }
-
-    /** 
-     * The Tweet and the Favourite have a one-to-many relationship
-     */
-    favorites () {
-        return this.hasMany('App/Models/Favorite')
-    }
+  /**
+   * A tweet can have as many favorites.
+   *
+   * @method favorites
+   *
+   * @return {Object}
+   */
+  favorites () {
+    return this.hasMany('App/Models/Favorite')
+  }
 }
 
 module.exports = Tweet

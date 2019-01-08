@@ -1,25 +1,29 @@
 'use strict'
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
 class Reply extends Model {
+  /**
+   * A reply is to a tweet.
+   *
+   * @method tweet
+   *
+   * @return {Object}
+   */
+  tweet () {
+    return this.belongsTo('App/Models/Tweet')
+  }
 
-    /**
-     * The Reply model belongs to a 
-     * relationship with User model
-     */
-    user () {
-        return this.belongsTo('App/Models/User')
-    }
-
-    /**
-     * The Reply model belongs to a 
-     * relationship with Tweet model
-     */
-    tweet () {
-        return this.belongsTo('App/Models/Tweet')
-    }
+  /**
+   * A reply is made by a user.
+   *
+   * @method user
+   *
+   * @return {Object}
+   */
+  user () {
+    return this.belongsTo('App/Models/User')
+  }
 }
 
 module.exports = Reply

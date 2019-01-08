@@ -1,82 +1,103 @@
 'use strict'
 
-/** @type {typeof import('@adonisjs/lucid/src/Lucid/Model')} */
 const Model = use('Model')
 
-/** @type {import('@adonisjs/framework/src/Hash')} */
-const Hash = use('Hash')
-
 class User extends Model {
-    static boot () {
-        super.boot()
-
-        /**
-         * A hook to hash the user password before saving
-         * it to the database.
-         */
-        this.addHook('beforeSave', async (userInstance) => {
-            if (userInstance.dirty.password) {
-                userInstance.password = await Hash.make(userInstance.password)
-            }
-        })
-    }
+  static boot () {
+    super.boot()
 
     /**
-     * A relationship on tokens is required for auth to
-     * work. Since features like `refreshTokens` or
-     * `rememberToken` will be saved inside the
-     * tokens table.
+     * A hook to hash the user password before saving
+     * it to the database.
      *
-     * @method tokens
-     *
-     * @return {Object}
+     * Look at `app/Models/Hooks/User.js` file to
+     * check the hashPassword method
      */
-    tokens () {
-        return this.hasMany('App/Models/Token')
-    }
+    this.addHook('beforeCreate', 'User.hashPassword')
+  }
 
-    /** 
-     * The User and the Tweet have a one-to-many relationship
-     */
-    tweets () {
-        return this.hasMany('App/Models/Tweet')
-    }
+  /**
+   * Hide password when user is fetched.
+   */
+  static get hidden () {
+    return ['password']
+  }
 
-    /**
-     * A user can have many followers and the user can follow many users
-     * This is a many-to-many relationship.
-     */
-    followers () {
-        return this.belongsToMany(
-            'App/Models/User', 
-            'user_id',
-            'follower_id'
-        ).pivotTable('followers')
-    }
+  /**
+   * A relationship on tokens is required for auth to
+   * work. Since features like `refreshTokens` or
+   * `rememberToken` will be saved inside the
+   * tokens table.
+   *
+   * @method tokens
+   *
+   * @return {Object}
+   */
+  tokens () {
+    return this.hasMany('App/Models/Token')
+  }
 
-    /**
-     * The inverse relationship of the previous
-     */
-    following () {
-        return this.belongsToMany(
-            'App/Models/User',
-            'follower_id',
-            'user_id'
-        ).pivotTable('followers')
-    }
+  /**
+   * A user can post many tweets as possible.
+   *
+   * @method tweets
+   *
+   * @return {Object}
+   */
+  tweets () {
+    return this.hasMany('App/Models/Tweet')
+  }
 
-    /** 
-     * The User and the Reply have a one-to-many relationship
-     */
-    replies () {
-        return this.hasMany('App/Models/Reply')
-    }
+  /**
+   * A user can have many followers.
+   *
+   * @method followers
+   *
+   * @return {Object}
+   */
+  followers () {
+    return this.belongsToMany(
+      'App/Models/User',
+      'user_id',
+      'follower_id'
+    ).pivotTable('followers')
+  }
 
-    /** 
-     * The User and the Favorite have a one-to-many relationship
-     */
-    favorites () {
-      return this.hasMany('App/Models/Favorite')
+  /**
+   * A user can follow many other users.
+   *
+   * @method following
+   *
+   * @return {Object}
+   */
+  following () {
+    return this.belongsToMany(
+      'App/Models/User',
+      'follower_id',
+      'user_id'
+    ).pivotTable('followers')
+  }
+
+  /**
+   * A user can have many favorite tweets.
+   *
+   * @method favorites
+   *
+   * @return {Object}
+   */
+  favorites () {
+    return this.hasMany('App/Models/Favorite')
+  }
+
+  /**
+   * A user can post many replies to a tweet.
+   *
+   * @method replies
+   *
+   * @return {Object}
+   */
+  replies () {
+    return this.hasMany('App/Models/Reply')
   }
 }
 

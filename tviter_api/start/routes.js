@@ -1,70 +1,48 @@
 'use strict'
 
-/*
-|--------------------------------------------------------------------------
-| Routes
-|--------------------------------------------------------------------------
-|
-| Http routes are entry points to your web application. You can create
-| routes for different URLs and bind Controller actions to them.
-|
-| A complete guide on routing is available here.
-| http://adonisjs.com/docs/4.0/routing
-|
-*/
-
-/** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
-Route.get('/', () => {
-    return { greeting: 'Hello world in JSON' }
-})
-
-/** 
- * UserController Routes
- */
-
+// user signup
 Route.post('/signup', 'UserController.signup')
-
+// user login
 Route.post('/login', 'UserController.login')
-
-Route.post('/follow/:id', 'UserController.follow')
-
-Route.get(':username', 'UserController.showProfile')
-
-Route.get('/timeline', 'UserController.timeline')
-
-Route.put('/change_password', 'UserController.changePassword')
-
-Route.delete('/unfollow/:id', 'UserController.unFollow')
-
+// user account
 Route.group(() => {
-    Route.get('/profile_data', 'UserController.profileData')
-    Route.post('/update_profile', 'UserController.updateProfile')
-}).prefix('account')
+  Route.get('/me', 'UserController.me')
+  Route.put('/update_profile', 'UserController.updateProfile')
+  Route.put('/change_password', 'UserController.changePassword')
+})
+  .prefix('account')
   .middleware(['auth:jwt'])
 
 Route.group(() => {
-    Route.get('/users_to_follow', 'UserController.usersToFollow');
-}).prefix('users')
+  Route.get('/timeline', 'UserController.timeline')
+  Route.get('/users_to_follow', 'UserController.usersToFollow')
+  Route.post('/follow', 'UserController.follow')
+  Route.delete('/unfollow/:id', 'UserController.unFollow')
+})
+  .prefix('users')
   .middleware(['auth:jwt'])
-
-
-/**
- * TweetController Routes
- */
 
 Route.post('/tweet', 'TweetController.tweet').middleware(['auth:jwt'])
-
-Route.post('/tweets/reply/:id', 'TweetController.reply').middleware(['auth:jwt'])
-
 Route.get('/tweets/:id', 'TweetController.show')
+Route.post('/tweets/reply/:id', 'TweetController.reply').middleware([
+  'auth:jwt'
+])
+// Delete tweet
+Route.delete('/tweets/destroy/:id', 'TweetController.destroy').middleware([
+  'auth:jwt'
+])
 
-Route.delete('/tweets/destroy/:id', 'TweetController.destroy').middleware(['auth:jwt'])
-
+// tweet reactions
 Route.group(() => {
-    Route.post('/create', 'FavoriteController.favorite')
-}).prefix('favorites')
+  // favorite tweet
+  Route.post('/create', 'FavoriteController.favorite')
+  // unfavorite tweet
+  Route.delete('/destroy/:id', 'FavoriteController.unFavorite')
+})
+  .prefix('favorites')
   .middleware(['auth:jwt'])
 
-Route.delete('/destroy/:id', 'FavoriteController.unFavorite');
+// User profile
+Route.get(':username', 'UserController.showProfile')
