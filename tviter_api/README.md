@@ -1,6 +1,6 @@
 # Adonis API application
 
-This is the boilerplate for creating an API server in AdonisJs, it comes pre-configured with.
+This is an API server in AdonisJS for the Tviter app, it comes pre-configured with:
 
 1. Bodyparser
 2. Authentication
@@ -18,11 +18,18 @@ adonis new yardstick --api-only
 
 or manually clone the repo and then run `npm install`.
 
-
 ### Migrations
 
 Run the following command to run startup migrations.
 
 ```js
 adonis migration:run
+```
+
+### Run the app locally
+
+Run the command to run the app on http://localhost:3333
+
+```js
+adonis serve --dev
 ```
